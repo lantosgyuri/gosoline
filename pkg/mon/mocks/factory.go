@@ -39,8 +39,8 @@ func NewLoggerMockedUntilLevel(level string) *Logger {
 	}
 
 	mockLoggerMethod(logger, "Debug", "Debugf", mon.Debug, levelIndex >= levelMap[mon.Debug])
-	mockLoggerMethod(logger, "Info", "Infof", mon.Info, levelIndex >= levelMap[mon.Info])
-	mockLoggerMethod(logger, "Warn", "Warnf", mon.Warn, levelIndex >= levelMap[mon.Warn])
+	mockLoggerMethod(logger, "Info", "Info", mon.Info, levelIndex >= levelMap[mon.Info])
+	mockLoggerMethod(logger, "Warn", "Warn", mon.Warn, levelIndex >= levelMap[mon.Warn])
 	mockLoggerMethod(logger, "Error", "Errorf", mon.Error, levelIndex >= levelMap[mon.Error])
 
 	return logger

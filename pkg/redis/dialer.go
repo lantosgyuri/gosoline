@@ -30,7 +30,7 @@ func dialerSrv(logger mon.Logger, settings *Settings) func() (net.Conn, error) {
 
 		if address == "" {
 			address = srvNamingStrategy(settings.AppId, settings.Name)
-			logger.Infof("no address provided for redis %s: using %s", settings.Name, address)
+			logger.Info("no address provided for redis %s: using %s", settings.Name, address)
 		}
 
 		_, srvs, err := net.LookupSRV("", "", address)
@@ -44,7 +44,7 @@ func dialerSrv(logger mon.Logger, settings *Settings) func() (net.Conn, error) {
 		}
 
 		address = fmt.Sprintf("%v:%v", srvs[0].Target, srvs[0].Port)
-		logger.Infof("using address %s for redis %s", address, settings.Name)
+		logger.Info("using address %s for redis %s", address, settings.Name)
 
 		return net.Dial("tcp", address)
 	}
@@ -52,7 +52,7 @@ func dialerSrv(logger mon.Logger, settings *Settings) func() (net.Conn, error) {
 
 func dialerTcp(logger mon.Logger, settings *Settings) func() (net.Conn, error) {
 	return func() (net.Conn, error) {
-		logger.Infof("using address %s for redis %s", settings.Address, settings.Name)
+		logger.Info("using address %s for redis %s", settings.Address, settings.Name)
 
 		return net.Dial("tcp", settings.Address)
 	}
