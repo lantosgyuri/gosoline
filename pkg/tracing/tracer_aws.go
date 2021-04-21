@@ -29,6 +29,7 @@ type XRaySettings struct {
 type awsTracer struct {
 	cfg.AppId
 	enabled bool
+	logger  mon.Logger
 }
 
 func NewAwsTracer(config cfg.Config, logger mon.Logger) (Tracer, error) {
@@ -86,10 +87,12 @@ func NewAwsTracerWithInterfaces(logger mon.Logger, appId cfg.AppId, settings *XR
 	return &awsTracer{
 		AppId:   appId,
 		enabled: settings.Enabled,
+		logger:  logger,
 	}, nil
 }
 
 func (t *awsTracer) StartSubSpan(ctx context.Context, name string) (context.Context, Span) {
+	t.logger.Infof("Start subSpan called with context: %+v, name: %s", name)
 	if !t.enabled {
 		return ctx, disabledSpan()
 	}
