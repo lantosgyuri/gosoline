@@ -18,6 +18,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/cenkalti/backoff"
 	"github.com/hashicorp/go-multierror"
+	"runtime"
 	"time"
 )
 
@@ -531,6 +532,12 @@ func (r *repository) PutItem(ctx context.Context, qb PutItemBuilder, item interf
 }
 
 func (r *repository) Query(ctx context.Context, qb QueryBuilder, items interface{}) (*QueryResult, error) {
+
+	_, file, no, ok := runtime.Caller(1)
+	if ok {
+		r.logger.Infof("Query called from %s#%d\n", file, no)
+	}
+
 	_, span := r.tracer.StartSubSpan(ctx, "ddb.Query")
 	defer span.Finish()
 
@@ -551,6 +558,8 @@ func (r *repository) Query(ctx context.Context, qb QueryBuilder, items interface
 	err = r.readAll(items, func() (*readResult, error) {
 		return r.doQuery(ctx, op)
 	})
+
+	r.logger.Infof("QUERY items are: %+v", op.result)
 
 	return op.result, err
 }
