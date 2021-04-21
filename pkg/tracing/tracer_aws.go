@@ -92,7 +92,7 @@ func NewAwsTracerWithInterfaces(logger mon.Logger, appId cfg.AppId, settings *XR
 }
 
 func (t *awsTracer) StartSubSpan(ctx context.Context, name string) (context.Context, Span) {
-	t.logger.Infof("Start subSpan called with context: %+v, name: %s", name)
+	t.logger.Infof("Start subSpan called with context: %+v, name: %s", ctx, name)
 	if !t.enabled {
 		return ctx, disabledSpan()
 	}
