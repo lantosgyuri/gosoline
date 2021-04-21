@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"net"
 	"net/http"
+	"runtime"
 )
 
 const (
@@ -92,6 +93,10 @@ func NewAwsTracerWithInterfaces(logger mon.Logger, appId cfg.AppId, settings *XR
 }
 
 func (t *awsTracer) StartSubSpan(ctx context.Context, name string) (context.Context, Span) {
+	_, file, no, ok := runtime.Caller(1)
+	if ok {
+		t.logger.Infof("Start subSPan called from %s#%d\n", file, no)
+	}
 	t.logger.Infof("Start subSpan called with context: %+v, name: %s", ctx, name)
 	if !t.enabled {
 		return ctx, disabledSpan()
